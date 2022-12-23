@@ -3,7 +3,7 @@
     <nav class="container py-5 px-4 flex flex-col gap-4 items-center sm:flex-row">
       <div class="flex items-center gap-x-4">
         <img class="w-14" src="../assets/vue.svg" alt="" />
-        <h1 class="text-lg">Final Project</h1>
+        <h1 class="text-lg">Fokuso app</h1>
       </div>
       <ul class="flex flex-1 justify-end gap-x-10">
         <router-link v-if="!userStore.user" class="cursor-pointer" :to="{ name: 'Login' }"
