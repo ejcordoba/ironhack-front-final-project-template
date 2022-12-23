@@ -15,6 +15,18 @@ export const useTaskStore = defineStore("tasks", {
         .order("id", { ascending: false });
       this.tasks = tasks;
     },
+    async createTask() {
+      
+    },
+    async editTask() {
+      
+    },
+    async deleteTask() {
+      
+    },
+    async toggleCompletionTask() {
+      
+    },
     // Hacer POST
     // Hacer el PUT (edit)
     // Hacer el delete

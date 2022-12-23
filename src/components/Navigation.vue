@@ -21,6 +21,9 @@
           :to="{ name: 'Dashboard' }"
           >Dashboard</router-link
         >
+        <router-link v-if="userStore.user" class="cursor-pointer" :to="{ name: 'Tasks' }"
+          >Tasks</router-link
+        >
         <li v-if="userStore.user" @click="logout" class="cursor-pointer">Logout</li>
       </ul>
     </nav>
