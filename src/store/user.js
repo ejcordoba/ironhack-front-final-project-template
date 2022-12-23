@@ -13,14 +13,16 @@ export const useUserStore = defineStore("user", {
       this.user = user;
     },
     async signUp(email, password) {
-      const { user, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-      });
-      if (error) throw error;
-      console.log(error);
-      if (user) this.user = user;
-      console.log(user);
+      try {
+        const { user, error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+        });
+        if (error) throw error;
+        if (user) this.user = user;
+      } catch (error) {
+        throw error;
+      }
     },
     async signIn(email, password) {
       try {
@@ -28,14 +30,12 @@ export const useUserStore = defineStore("user", {
           email: email,
           password: password,
         });
-        console.log(error);
+        if (user) this.user = user;      
         if (error) throw error;
       } catch (error) {
-        console.log("bye");
         throw error;
       }
-      //if (error) throw error;
-      if (user) this.user = user;      
+
     },
     async logout() {
       const { user, error } = await supabase.auth.signOut();

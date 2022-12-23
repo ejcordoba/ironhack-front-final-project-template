@@ -72,11 +72,10 @@ const userStore = useUserStore();
 const register = async () => {
   if (password.value === confirmPassword.value) {
     try {
-      const { error } = userStore.signUp(email.value, password.value);
-      if (error) throw error;
+      const response = userStore.signUp(email.value, password.value);
       router.push({ name: "Login" });
     } catch (error) {
-      errorMsg.value = error.message;
+      errorMsg.value = `Error: ${error.message}`;
       setTimeout(() => {
         errorMsg.value = null;
       }, 5000);

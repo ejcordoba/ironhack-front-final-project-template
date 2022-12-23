@@ -57,12 +57,9 @@ const router = useRouter();
 const userStore = useUserStore();
 const login = async () => {
   try {
-    const { error } = await userStore.signIn(email.value, password.value);
-    console.log(error);
-    if (error) throw error;
-    //router.push({ name: "Dashboard" });
+    const response = await userStore.signIn(email.value, password.value);
+    router.push({ name: "Dashboard" });
   } catch (error) {
-    console.log("hi");
     errorMsg.value = `Error: ${error.message}`;
     setTimeout(() => {
       errorMsg.value = null;
