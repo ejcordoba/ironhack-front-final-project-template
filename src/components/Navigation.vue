@@ -6,11 +6,22 @@
         <h1 class="text-lg">Final Project</h1>
       </div>
       <ul class="flex flex-1 justify-end gap-x-10">
-        <router-link class="cursor-pointer" :to="{ name: 'Login' }">Login</router-link>
-        <router-link class="cursor-pointer" :to="{ name: 'Dashboard' }"
+        <router-link v-if="!userStore.user" class="cursor-pointer" :to="{ name: 'Login' }"
+          >Login</router-link
+        >
+        <router-link
+          v-if="!userStore.user"
+          class="cursor-pointer"
+          :to="{ name: 'Register' }"
+          >Register</router-link
+        >
+        <router-link
+          v-if="userStore.user"
+          class="cursor-pointer"
+          :to="{ name: 'Dashboard' }"
           >Dashboard</router-link
         >
-        <li @click="logout" class="cursor-pointer">Logout</li>
+        <li v-if="userStore.user" @click="logout" class="cursor-pointer">Logout</li>
       </ul>
     </nav>
   </header>
@@ -26,13 +37,13 @@ const logout = async () => {
   try {
     const { error } = userStore.logout();
     if (error) throw error;
+    router.push({ name: "Login" });
   } catch (error) {
     errorMsg.value = `Error: ${error.message}`;
     setTimeout(() => {
       errorMsg.value = null;
     }, 5000);
   }
-  router.push({ name: "Login" });
 };
 </script>
 
