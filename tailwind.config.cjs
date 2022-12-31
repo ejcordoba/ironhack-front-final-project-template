@@ -6,16 +6,17 @@ module.exports = {
       colors: {
         "at-light-green": "#44ba9f",
         "at-green": "#286d5d",
-        "light-grey": "#f1f1f1"
-      }
+        "light-grey": "#f1f1f1",
+      },
     },
     fontFamily: {
-      Poppins: ["Poppins, sans-serif"],
+      //Poppins: ["Poppins, sans-serif"],
+      Oxygen: ["Oxygen, sans-serif"],
     },
     flex: {
-      "1": "1 1 0%",
-      "2": "2 2 0%",
-    }
+      1: "1 1 0%",
+      2: "2 2 0%",
+    },
   },
   plugins: [],
 };
