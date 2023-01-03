@@ -12,6 +12,7 @@
     "@supabase/supabase-js": "^1.35.6",
     "pinia": "^2.0.18",
     "pinia-plugin-persist": "^1.0.0",
+    "uid": "^2.0.1",
     "vue": "^3.2.37",
     "vue-router": "^4.1.3"
   },
