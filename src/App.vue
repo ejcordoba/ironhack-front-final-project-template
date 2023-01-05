@@ -25,8 +25,8 @@ onMounted(async () => {
       // redirect them to logout if the user is not there
       router.push({ path: "/login" });
     } else {
-      // continue to dashboard
-      router.push({ path: "/" });
+      // continue to tasks page
+      router.push({ path: "/tasks" });
     }
   } catch (e) {
     console.log(e);

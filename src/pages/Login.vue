@@ -58,7 +58,7 @@ const userStore = useUserStore();
 const login = async () => {
   try {
     const response = await userStore.signIn(email.value, password.value);
-    router.push({ name: "Dashboard" });
+    router.push({ name: "Tasks" });
   } catch (error) {
     errorMsg.value = `Error: ${error.message}`;
     setTimeout(() => {
