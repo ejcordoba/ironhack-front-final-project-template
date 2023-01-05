@@ -18,20 +18,34 @@ export const useTaskStore = defineStore("tasks", {
         .select("*")
         .order("id", { ascending: false });
       this.tasks = tasks;
-      console.log(this.tasks);
     },
     async createTask(taskToInsert) {
-      console.log(taskToInsert);
-      const { data, error } = await supabase.from("tasks").insert([
-        {
-          user_id: taskToInsert.user_id,
-          title: taskToInsert.title,
-          is_complete: false,
-        },
-      ]);
+      try {
+        const { data, error } = await supabase.from("tasks").insert([
+          {
+            user_id: taskToInsert.user_id,
+            title: taskToInsert.title,
+            is_complete: false,
+          },
+        ]);
+        this.fetchTasks();
+      } catch (error) {
+        throw error;
+      }
     },
     async editTask(id) {},
-    async deleteTask(id) {},
+    async deleteTask(id) {
+      try {
+        const { data, error } = await supabase
+          .from("tasks")
+          .delete()
+          .eq("id", id);
+      } catch (error) {
+        console.log(error);
+        //throw error;
+      }
+      console.log(id);
+    },
     async toggleCompletionTask(id) {},
     // Hacer POST
     // Hacer el PUT (edit)

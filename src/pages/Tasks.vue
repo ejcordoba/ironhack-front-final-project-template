@@ -32,13 +32,13 @@
           Add task
         </button>
         <hr />
-        <button
+        <!-- <button
           v-if="tasksArray && tasksArray.length > 0"
           type="submit"
           class="mt-6 py-2 px-6 rounded-sm self-start text-sm text-white bg-at-light-green duration-200 border-solid border-2 border-transparent hover:border-at-light-green hover:bg-white hover:text-at-light-green"
         >
           Save task(s)
-        </button>
+        </button> -->
       </form>
     </div>
   </div>
@@ -82,7 +82,7 @@
                   Edit
                 </button>
                 <button
-                  @click="deleteTask(index)"
+                  @click="deleteTask(task.id)"
                   type="button"
                   class="my-1 py-2 px-6 rounded-sm self-start text-sm text-white bg-red-500 border-solid border-2 border-transparent hover:border-red-500 hover:bg-white hover:text-red-500"
                 >
@@ -134,7 +134,7 @@
                   Edit
                 </button>
                 <button
-                  @click="deleteTask(index)"
+                  @click="deleteTask(task.id)"
                   type="button"
                   class="my-1 py-2 px-6 rounded-sm self-start text-sm text-white bg-red-500 border-solid border-2 border-transparent hover:border-red-500 hover:bg-white hover:text-red-500"
                 >
@@ -150,51 +150,52 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+//import { ref } from "vue";
 import { useTaskStore } from "../store/task.js";
 import { useUserStore } from "../store/user.js";
 import { uid } from "uid";
 
-const editInput = ref(null);
-const taskTitle = ref("");
-const taskComplete = ref(false);
-const statusMsg = ref(null);
-const errorMsg = ref(null);
+const editInput = $ref(null);
+const taskTitle = $ref("");
+const taskComplete = $ref(false);
+const statusMsg = $ref(null);
+const errorMsg = $ref(null);
 const tasksStore = useTaskStore();
 const userStore = useUserStore();
-console.log(userStore.user.id);
-tasksStore.fetchTasks();
-let tasksArray = ref(tasksStore.tasks);
-console.log(tasksArray.value);
+let tasksArray = $ref([]);
+
+async function getTasks() {
+  await tasksStore.fetchTasks();
+  tasksArray = tasksStore.tasks;
+}
+
+getTasks();
 
 const addTask = async () => {
   try {
-    if (taskTitle.value !== "") {
-      console.log(userStore.user.id);
+    if (taskTitle !== "") {
       const response = await tasksStore.createTask({
         user_id: userStore.user.id,
-        title: taskTitle.value,
+        title: taskTitle,
         is_complete: 0,
       });
-      console.log(response);
+    } else {
+      errorMsg = `Error: You must type a task title`;
+      setTimeout(() => {
+        errorMsg = null;
+      }, 5000);
     }
   } catch (error) {
-    errorMsg.value = `Error: ${error.message}`;
+    errorMsg = `Error: ${error.message}`;
     setTimeout(() => {
-      errorMsg.value = null;
+      errorMsg = null;
     }, 5000);
   }
   return;
 };
-function deleteTask(index) {
-  if (tasksArray.value.length > 0) {
-    tasksArray.value.splice(index, 1);
-    return;
-  }
-  errorMsg.value = "Error: Cannot remove, you may have at least one task";
-  setTimeout(() => {
-    errorMsg.value = false;
-  }, 5000);
+async function deleteTask(id) {
+  const response = await tasksStore.deleteTask(id);
+  getTasks();
 }
 function editTask(index) {
   this.tasksArray[index].isDisabled = !this.tasksArray[index].isDisabled;
@@ -202,12 +203,12 @@ function editTask(index) {
 
 const saveTasks = async () => {
   try {
-    const response = await tasksStore.createTask(tasksArray.value);
+    const response = await tasksStore.createTask(tasksArray);
     console.log(response);
   } catch (error) {
-    errorMsg.value = `Error: ${error.message}`;
+    errorMsg = `Error: ${error.message}`;
     setTimeout(() => {
-      errorMsg.value = null;
+      errorMsg = null;
     }, 5000);
   }
   return;
