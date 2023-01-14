@@ -25,6 +25,7 @@ export const useTaskStore = defineStore("tasks", {
           },
         ]);
         this.fetchTasks();
+        return data;
       } catch (error) {
         throw error;
       }

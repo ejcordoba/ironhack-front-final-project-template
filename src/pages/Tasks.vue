@@ -91,7 +91,7 @@
     </div>
     <div
       class="flex items-start bg-light-grey rounded-md shadow-lg w-2/5 mx-auto flex-col"
-      v-if="(tasksArray && tasksArray.length > 0) || !allDone"
+      v-if="tasksArray && tasksArray.length > 0"
     >
       <h1 class="mx-auto py-3 text-2xl text-at-light-green">Complete task list</h1>
       <div class="flex items-start bg-light-grey w-full">
@@ -179,6 +179,7 @@ async function addTask() {
         title: taskTitle,
         is_complete: 0,
       });
+      console.log(response);
       getTasks();
       //checkCompletion();
     } else {
@@ -220,9 +221,13 @@ async function deleteTask(id) {
 
 async function checkCompletion(id, complete) {
   const response = await tasksStore.toggleCompletionTask(id, complete);
-  allDone = await Object.values(tasksArray).every(
-    (task) => task.is_complete === true || task.is_complete === 1
-  );
+  let found = tasksArray.find((e) => e.is_complete === true);
+  /* if (this.tasksArray.some(tasksArray.is_complete)) {
+    allDone = false;
+  } else {
+    allDone = true;
+  } */
+  console.log(found);
   console.log(tasksArray);
   console.log(allDone);
 }
