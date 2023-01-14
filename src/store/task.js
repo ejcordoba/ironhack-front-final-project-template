@@ -6,6 +6,8 @@ import { supabase } from "../supabase";
 export const useTaskStore = defineStore("tasks", {
   state: () => ({
     tasks: null,
+    tasksCompleted: null,
+    tasksToDo: null,
   }),
   actions: {
     async fetchTasks() {
@@ -14,6 +16,8 @@ export const useTaskStore = defineStore("tasks", {
         .select("*")
         .order("id", { ascending: false });
       this.tasks = tasks;
+      this.tasksCompleted = this.tasks.filter((obj) => obj.is_complete);
+      this.tasksToDo = this.tasks.filter((obj) => !obj.is_complete);
     },
     async createTask(taskToInsert) {
       try {
