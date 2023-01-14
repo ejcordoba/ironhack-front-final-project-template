@@ -32,26 +32,19 @@
           Add task
         </button>
         <hr />
-        <!-- <button
-          v-if="tasksArray && tasksArray.length > 0"
-          type="submit"
-          class="mt-6 py-2 px-6 rounded-sm self-start text-sm text-white bg-at-light-green duration-200 border-solid border-2 border-transparent hover:border-at-light-green hover:bg-white hover:text-at-light-green"
-        >
-          Save task(s)
-        </button> -->
       </form>
     </div>
   </div>
   <div class="max-w-screen-2xl mx-auto px-4 py-10 flex">
     <div
       class="flex items-start bg-light-grey rounded-md shadow-lg w-2/5 mx-auto flex-col"
-      v-if="tasksArray && tasksArray.length > 0"
+      v-if="(tasksArray && tasksArray.length > 0) || allDone"
     >
       <h1 class="mx-auto py-3 text-2xl text-at-light-green">To-Do task list</h1>
       <div class="flex items-start bg-light-grey w-full" v-if="tasksArray.length > 0">
         <div class="flex flex-col gap-y-5 w-full">
           <div v-for="(task, index) in tasksArray" class="flex flex-row align-middle">
-            <div v-if="!task.complete" class="flex">
+            <div v-if="!task.is_complete" class="flex">
               <div class="flex flex-col">
                 <input
                   type="text"
@@ -61,13 +54,15 @@
                   v-model="task.title"
                   :readonly="task.isDisabled"
                   :disabled="task.isDisabled"
+                  @keyup.enter="editTask(index)"
                 />
               </div>
               <div class="flex items-center mr-3">
                 <input
                   class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   type="checkbox"
-                  v-model="task.complete"
+                  v-model="task.is_complete"
+                  @change="checkCompletion(task.id, task.is_complete)"
                 />
                 <label class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >Complete</label
@@ -96,13 +91,13 @@
     </div>
     <div
       class="flex items-start bg-light-grey rounded-md shadow-lg w-2/5 mx-auto flex-col"
-      v-if="tasksArray && tasksArray.length > 0"
+      v-if="(tasksArray && tasksArray.length > 0) || !allDone"
     >
       <h1 class="mx-auto py-3 text-2xl text-at-light-green">Complete task list</h1>
       <div class="flex items-start bg-light-grey w-full">
         <div class="flex flex-col gap-y-5 w-full">
           <div v-for="(task, index) in tasksArray" class="flex flex-row align-middle">
-            <div v-if="task.complete" class="flex">
+            <div v-if="task.is_complete" class="flex">
               <div class="flex flex-col">
                 <input
                   ref="editInput"
@@ -113,13 +108,15 @@
                   v-model="task.title"
                   :readonly="task.isDisabled"
                   :disabled="task.isDisabled"
+                  @keyup.enter="editTask(index)"
                 />
               </div>
               <div class="flex items-center">
                 <input
                   class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   type="checkbox"
-                  v-model="task.complete"
+                  v-model="task.is_complete"
+                  @change="checkCompletion(task.id, task.is_complete)"
                 />
                 <label class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >Complete</label
@@ -163,15 +160,18 @@ const errorMsg = $ref(null);
 const tasksStore = useTaskStore();
 const userStore = useUserStore();
 let tasksArray = $ref([]);
+let allDone = $ref(false);
+
+getTasks();
 
 async function getTasks() {
   await tasksStore.fetchTasks();
   tasksArray = tasksStore.tasks;
+  tasksArray = tasksArray.map((obj) => ({ ...obj, isDisabled: true }));
+  console.log(tasksArray);
 }
 
-getTasks();
-
-const addTask = async () => {
+async function addTask() {
   try {
     if (taskTitle !== "") {
       const response = await tasksStore.createTask({
@@ -179,6 +179,8 @@ const addTask = async () => {
         title: taskTitle,
         is_complete: 0,
       });
+      getTasks();
+      //checkCompletion();
     } else {
       errorMsg = `Error: You must type a task title`;
       setTimeout(() => {
@@ -191,17 +193,9 @@ const addTask = async () => {
       errorMsg = null;
     }, 5000);
   }
-  return;
-};
-async function deleteTask(id) {
-  const response = await tasksStore.deleteTask(id);
-  getTasks();
-}
-function editTask(index) {
-  this.tasksArray[index].isDisabled = !this.tasksArray[index].isDisabled;
 }
 
-const saveTasks = async () => {
+async function saveTasks() {
   try {
     const response = await tasksStore.createTask(tasksArray);
     console.log(response);
@@ -211,8 +205,27 @@ const saveTasks = async () => {
       errorMsg = null;
     }, 5000);
   }
-  return;
-};
+}
+
+async function editTask(index) {
+  let updateTaskData = this.tasksArray[index];
+  const response = await tasksStore.editTask(updateTaskData.id, updateTaskData);
+  this.tasksArray[index].isDisabled = !this.tasksArray[index].isDisabled;
+}
+
+async function deleteTask(id) {
+  const response = await tasksStore.deleteTask(id);
+  getTasks();
+}
+
+async function checkCompletion(id, complete) {
+  const response = await tasksStore.toggleCompletionTask(id, complete);
+  allDone = await Object.values(tasksArray).every(
+    (task) => task.is_complete === true || task.is_complete === 1
+  );
+  console.log(tasksArray);
+  console.log(allDone);
+}
 </script>
 
 <style lang="scss" scoped></style>

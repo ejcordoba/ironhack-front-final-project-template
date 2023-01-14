@@ -6,10 +6,6 @@ import { supabase } from "../supabase";
 export const useTaskStore = defineStore("tasks", {
   state: () => ({
     tasks: null,
-    tempTask: {
-      title: "",
-      completed: false,
-    },
   }),
   actions: {
     async fetchTasks() {
@@ -33,7 +29,19 @@ export const useTaskStore = defineStore("tasks", {
         throw error;
       }
     },
-    async editTask(id) {},
+    async editTask(id, taskData) {
+      try {
+        const { data, error } = await supabase
+          .from("tasks")
+          .update({
+            title: taskData.title,
+            is_complete: taskData.is_complete,
+          })
+          .eq("id", id);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async deleteTask(id) {
       try {
         const { data, error } = await supabase
@@ -46,7 +54,16 @@ export const useTaskStore = defineStore("tasks", {
       }
       console.log(id);
     },
-    async toggleCompletionTask(id) {},
+    async toggleCompletionTask(id, complete) {
+      try {
+        const { data, error } = await supabase
+          .from("tasks")
+          .update({ is_complete: complete })
+          .eq("id", id);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     // Hacer POST
     // Hacer el PUT (edit)
     // Hacer el delete
