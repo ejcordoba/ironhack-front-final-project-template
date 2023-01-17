@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-start bg-light-grey rounded-md shadow-lg w-2/5 mx-auto flex-col">
+  <!-- <div class="flex items-start bg-light-grey rounded-md shadow-lg w-2/5 mx-auto flex-col">
     <h1 class="mx-auto py-3 text-2xl text-at-light-green">{{ componentTitle }}</h1>
     <div class="flex items-start bg-light-grey w-full">
       <div class="flex flex-col gap-y-5 w-full">
@@ -48,19 +48,58 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script setup>
 import { useTaskStore } from "../store/task.js";
 import { useUserStore } from "../store/user.js";
+import { storeToRefs } from "pinia";
+import { ref, watch } from "vue";
 const tasksStore = useTaskStore();
 const userStore = useUserStore();
+let tasksArray = ref([]);
+let tasksToDo = ref([tasksStore.tasksToDo]);
+let tasksCompleted = ref([tasksStore.tasksCompleted]);
 const props = defineProps({
   componentTitle: String,
   dataControl: String,
 });
-let tasksArray = $ref([]);
+
+console.log(tasksArray.value);
+tasksArray.value = tasksStore.tasks;
+console.log(tasksStore.tasks);
+//getTasks();
+console.log(tasksArray.value);
+
+// watch works directly on a ref
+watch(tasksArray, async (newtasksToDo, oldtasksToDo) => {
+  //tasksArray.value = newtasksToDo;
+  console.log(tasksArray.value);
+  console.log(oldtasksToDo);
+  console.log(newtasksToDo);
+  console.log(tasksToDo);
+});
+
+async function getTasks() {
+  try {
+    await tasksStore.fetchTasks();
+    if (props.dataControl === "to-do") {
+      tasksArray = tasksStore.tasksToDo;
+      tasksArray = tasksArray.map((obj) => ({ ...obj, isDisabled: true }));
+    } else {
+      tasksArray = tasksStore.tasksCompleted;
+      tasksArray = tasksArray.map((obj) => ({ ...obj, isDisabled: true }));
+    }
+  } catch (error) {
+    errorMsg = `Error: ${error.message}`;
+    setTimeout(() => {
+      errorMsg = null;
+    }, 5000);
+  }
+}
+//console.log(tasksArray);
+/* let tasksArray = $ref([]);
 
 let tasksLoaded = false;
 
@@ -86,7 +125,7 @@ async function getTasks() {
       errorMsg = null;
     }, 5000);
   }
-}
+} */
 async function editTask(index) {
   let updateTaskData = this.tasksArray[index];
   const response = await tasksStore.editTask(updateTaskData.id, updateTaskData);

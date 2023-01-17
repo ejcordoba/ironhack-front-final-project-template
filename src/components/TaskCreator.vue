@@ -20,13 +20,11 @@
             class="p-2 text-gray-500 focus:outline-none"
             id="task-title"
             v-model="taskTitle"
-            @keyup.enter="addTask"
           />
         </div>
 
         <button
-          @click="addTask"
-          type="button"
+          type="submit"
           class="mt-6 py-2 px-6 rounded-sm self-start text-sm text-white bg-at-light-green duration-200 border-solid border-2 border-transparent hover:border-at-light-green hover:bg-white hover:text-at-light-green"
         >
           Add task
@@ -35,28 +33,32 @@
       </form>
     </div>
   </div>
+  <div class="max-w-screen-2xl mx-auto px-4 py-10 flex">
+    <TaskController componentTitle="To-Do Task List"></TaskController>
+    <TaskController componentTitle="Complete Task List"></TaskController>
+  </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useUserStore } from "../store/user.js";
 import { useTaskStore } from "../store/task.js";
-const statusMsg = $ref(null);
-const errorMsg = $ref(null);
-const taskTitle = $ref("");
+import TaskController from "../components/TaskController.vue";
+
 const userStore = useUserStore();
 const tasksStore = useTaskStore();
-let tasksArray = $ref([]);
+const statusMsg = ref(null);
+const errorMsg = ref(null);
+const taskTitle = ref("");
 
 async function addTask() {
   try {
-    if (taskTitle !== "") {
-      const response = await tasksStore.createTask({
+    if (taskTitle.value !== "") {
+      await tasksStore.createTask({
         user_id: userStore.user.id,
-        title: taskTitle,
+        title: taskTitle.value,
         is_complete: 0,
       });
-      console.log(response);
-      getTasks();
     } else {
       errorMsg = `Error: You must type a task title`;
       setTimeout(() => {
@@ -69,12 +71,6 @@ async function addTask() {
       errorMsg = null;
     }, 5000);
   }
-}
-async function getTasks() {
-  await tasksStore.fetchTasks();
-  tasksArray = tasksStore.tasks;
-  tasksArray = tasksArray.map((obj) => ({ ...obj, isDisabled: true }));
-  console.log(tasksArray);
 }
 </script>
 
