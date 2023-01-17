@@ -1,6 +1,8 @@
 <template>
-  <!-- <div class="flex items-start bg-light-grey rounded-md shadow-lg w-2/5 mx-auto flex-col">
-    <h1 class="mx-auto py-3 text-2xl text-at-light-green">{{ componentTitle }}</h1>
+  <div class="flex items-start bg-light-grey rounded-md shadow-lg w-2/5 mx-auto flex-col">
+    <h1 class="mx-auto py-3 text-2xl text-at-light-green">
+      {{ componentTitle }}
+    </h1>
     <div class="flex items-start bg-light-grey w-full">
       <div class="flex flex-col gap-y-5 w-full">
         <div v-for="(task, index) in tasksArray" class="flex flex-row align-middle">
@@ -48,7 +50,7 @@
         </div>
       </div>
     </div>
-  </div> -->
+  </div>
 </template>
 
 <script setup>
@@ -59,93 +61,97 @@ import { ref, watch } from "vue";
 const tasksStore = useTaskStore();
 const userStore = useUserStore();
 let tasksArray = ref([]);
-let tasksToDo = ref([tasksStore.tasksToDo]);
-let tasksCompleted = ref([tasksStore.tasksCompleted]);
+let tasksToDo = ref([]);
+let tasksComplete = ref([]);
 const props = defineProps({
   componentTitle: String,
   dataControl: String,
 });
 
-console.log(tasksArray.value);
-tasksArray.value = tasksStore.tasks;
-console.log(tasksStore.tasks);
-//getTasks();
-console.log(tasksArray.value);
+onLoad();
 
-// watch works directly on a ref
-watch(tasksArray, async (newtasksToDo, oldtasksToDo) => {
-  //tasksArray.value = newtasksToDo;
-  console.log(tasksArray.value);
-  console.log(oldtasksToDo);
-  console.log(newtasksToDo);
-  console.log(tasksToDo);
-});
-
-async function getTasks() {
-  try {
+async function onLoad() {
+  if (props.dataControl === "to-do") {
     await tasksStore.fetchTasks();
-    if (props.dataControl === "to-do") {
-      tasksArray = tasksStore.tasksToDo;
-      tasksArray = tasksArray.map((obj) => ({ ...obj, isDisabled: true }));
-    } else {
-      tasksArray = tasksStore.tasksCompleted;
-      tasksArray = tasksArray.map((obj) => ({ ...obj, isDisabled: true }));
+    try {
+      tasksArray.value = tasksStore.tasksToDo;
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    errorMsg = `Error: ${error.message}`;
-    setTimeout(() => {
-      errorMsg = null;
-    }, 5000);
+    watch(
+      tasksStore,
+      (tasksStore) => {
+        tasksArray.value = tasksStore.tasksToDo;
+      },
+      { deep: true }
+    );
+  } else {
+    await tasksStore.fetchTasks();
+    try {
+      tasksArray.value = tasksStore.tasksCompleted;
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(tasksArray.value);
+    watch(
+      tasksStore,
+      (tasksStore) => {
+        tasksArray.value = tasksStore.tasksCompleted;
+      },
+      { deep: true }
+    );
   }
 }
-//console.log(tasksArray);
-/* let tasksArray = $ref([]);
 
-let tasksLoaded = false;
+async function updateTasks() {
+  await tasksStore.fetchTasks();
 
-let tasksToDo = $ref([]);
-let tasksCompleted = $ref([]);
-let allDone = $ref(false);
-
-getTasks();
-
-async function getTasks() {
-  try {
-    await tasksStore.fetchTasks();
-    if (props.dataControl === "to-do") {
-      tasksArray = tasksStore.tasksToDo;
-      tasksArray = tasksArray.map((obj) => ({ ...obj, isDisabled: true }));
-    } else {
-      tasksArray = tasksStore.tasksCompleted;
-      tasksArray = tasksArray.map((obj) => ({ ...obj, isDisabled: true }));
-    }
-  } catch (error) {
-    errorMsg = `Error: ${error.message}`;
-    setTimeout(() => {
-      errorMsg = null;
-    }, 5000);
+  tasksToDo.value = tasksStore.tasksToDo;
+  if (tasksToDo.value) {
+    tasksToDo.value = tasksToDo.value.map((obj) => ({
+      ...obj,
+      isDisabled: true,
+    }));
   }
-} */
-async function editTask(index) {
+
+  tasksComplete.value = tasksStore.tasksComplete;
+  if (tasksComplete.value) {
+    tasksComplete.value = tasksComplete.value.map((obj) => ({
+      ...obj,
+      isDisabled: true,
+    }));
+  }
+
+  tasksArray.value =
+    props.dataControl === "to-do" ? tasksToDo.value : tasksComplete.value;
+
+  /*  watch(tasksArray.value, async (newQuestion, oldQuestion) => {
+    console.log(newQuestion);
+    console.log(oldQuestion);
+    console.log(tasksArray.value);
+  }); */
+}
+
+/* async function editTask(index) {
   let updateTaskData = this.tasksArray[index];
   const response = await tasksStore.editTask(updateTaskData.id, updateTaskData);
   this.tasksArray[index].isDisabled = !this.tasksArray[index].isDisabled;
-}
+} */
 
-async function deleteTask(id) {
+/* async function deleteTask(id) {
   const response = await tasksStore.deleteTask(id);
-  getTasks();
-}
+  updateTasks();
+} */
 
-async function checkCompletion(id, complete) {
+/* async function checkCompletion(id, complete) {
   const response = await tasksStore.toggleCompletionTask(id, complete);
-  //  let found = tasksArray.find((e) => e.is_complete === true);
-  /* if (this.tasksArray.some(tasksArray.is_complete)) {
+  let found = tasksArray.find((e) => e.is_complete === true);
+  if (this.tasksArray.some(tasksArray.is_complete)) {
     allDone = false;
   } else {
     allDone = true;
-  } */
-}
+  }
+} */
 </script>
 
 <style lang="scss" scoped></style>

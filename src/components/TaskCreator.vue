@@ -33,17 +33,12 @@
       </form>
     </div>
   </div>
-  <div class="max-w-screen-2xl mx-auto px-4 py-10 flex">
-    <TaskController componentTitle="To-Do Task List"></TaskController>
-    <TaskController componentTitle="Complete Task List"></TaskController>
-  </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useUserStore } from "../store/user.js";
 import { useTaskStore } from "../store/task.js";
-import TaskController from "../components/TaskController.vue";
 
 const userStore = useUserStore();
 const tasksStore = useTaskStore();
