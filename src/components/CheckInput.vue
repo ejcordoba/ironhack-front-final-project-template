@@ -12,7 +12,7 @@
 
 <script setup>
 import { useTaskStore } from "../store/task.js";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 const props = defineProps(["task"]);
 const tasksStore = useTaskStore();
 
