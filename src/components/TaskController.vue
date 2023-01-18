@@ -20,15 +20,7 @@
               />
             </div>
             <div class="flex items-center mr-3">
-              <input
-                class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                type="checkbox"
-                v-model="task.is_complete"
-                @change="checkCompletion(task.id, task.is_complete)"
-              />
-              <label class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >Complete</label
-              >
+              <check-input :task="task"></check-input>
             </div>
             <div class="flex flex-row">
               <button
@@ -56,8 +48,8 @@
 <script setup>
 import { useTaskStore } from "../store/task.js";
 import { useUserStore } from "../store/user.js";
-import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
+import CheckInput from "../components/CheckInput.vue";
 const tasksStore = useTaskStore();
 const userStore = useUserStore();
 let tasksArray = ref([]);
@@ -112,13 +104,6 @@ async function editTask(index) {
 async function deleteTask(id) {
   const response = await tasksStore.deleteTask(id);
   loadTasks();
-}
-
-async function checkCompletion(id, complete) {
-  console.log(id, complete);
-  const response = await tasksStore.toggleCompletionTask(id, complete);
-  loadTasks();
-  let found = tasksArray.value.find((e) => e.is_complete === true);
 }
 </script>
 
