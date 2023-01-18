@@ -75,6 +75,8 @@ async function onLoad() {
     await tasksStore.fetchTasks();
     try {
       tasksArray.value = tasksStore.tasksToDo;
+      //      tasksArray.value = tasksArray.value.map((obj) => ({ ...obj, isDisabled: true }));
+      console.log(tasksArray.value);
     } catch (error) {
       console.log(error);
     }
@@ -89,10 +91,11 @@ async function onLoad() {
     await tasksStore.fetchTasks();
     try {
       tasksArray.value = tasksStore.tasksCompleted;
+      //    tasksArray.value = tasksArray.value.map((obj) => ({ ...obj, isDisabled: true }));
+      console.log(tasksArray.value);
     } catch (error) {
       console.log(error);
     }
-    console.log(tasksArray.value);
     watch(
       tasksStore,
       (tasksStore) => {
@@ -103,7 +106,7 @@ async function onLoad() {
   }
 }
 
-async function updateTasks() {
+/* async function updateTasks() {
   await tasksStore.fetchTasks();
 
   tasksToDo.value = tasksStore.tasksToDo;
@@ -125,18 +128,18 @@ async function updateTasks() {
   tasksArray.value =
     props.dataControl === "to-do" ? tasksToDo.value : tasksComplete.value;
 
-  /*  watch(tasksArray.value, async (newQuestion, oldQuestion) => {
+  watch(tasksArray.value, async (newQuestion, oldQuestion) => {
     console.log(newQuestion);
     console.log(oldQuestion);
     console.log(tasksArray.value);
-  }); */
-}
+  });
+} */
 
-/* async function editTask(index) {
+async function editTask(index) {
   let updateTaskData = this.tasksArray[index];
   const response = await tasksStore.editTask(updateTaskData.id, updateTaskData);
   this.tasksArray[index].isDisabled = !this.tasksArray[index].isDisabled;
-} */
+}
 
 /* async function deleteTask(id) {
   const response = await tasksStore.deleteTask(id);

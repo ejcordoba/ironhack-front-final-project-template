@@ -16,6 +16,8 @@ export const useTaskStore = defineStore("tasks", {
         .select("*")
         .order("id", { ascending: false });
       this.tasks = tasks;
+      this.tasks = this.tasks.map((obj) => ({ ...obj, isDisabled: true }));
+      console.log(this.tasks);
       this.tasksCompleted = this.tasks.filter((obj) => obj.is_complete);
       this.tasksToDo = this.tasks.filter((obj) => !obj.is_complete);
     },
