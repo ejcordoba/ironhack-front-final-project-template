@@ -11,3 +11,4 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 - Check all validations for login, email confirmation, etc
 - Test different theme options for colours
 - Look for a nice icon for app
+- Avoid insert two tasks with same title
