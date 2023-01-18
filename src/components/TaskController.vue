@@ -68,14 +68,13 @@ const props = defineProps({
   dataControl: String,
 });
 
-onLoad();
+loadTasks();
 
-async function onLoad() {
+async function loadTasks() {
   if (props.dataControl === "to-do") {
     await tasksStore.fetchTasks();
     try {
       tasksArray.value = tasksStore.tasksToDo;
-      //      tasksArray.value = tasksArray.value.map((obj) => ({ ...obj, isDisabled: true }));
       console.log(tasksArray.value);
     } catch (error) {
       console.log(error);
@@ -91,8 +90,6 @@ async function onLoad() {
     await tasksStore.fetchTasks();
     try {
       tasksArray.value = tasksStore.tasksCompleted;
-      //    tasksArray.value = tasksArray.value.map((obj) => ({ ...obj, isDisabled: true }));
-      console.log(tasksArray.value);
     } catch (error) {
       console.log(error);
     }
@@ -106,55 +103,23 @@ async function onLoad() {
   }
 }
 
-/* async function updateTasks() {
-  await tasksStore.fetchTasks();
-
-  tasksToDo.value = tasksStore.tasksToDo;
-  if (tasksToDo.value) {
-    tasksToDo.value = tasksToDo.value.map((obj) => ({
-      ...obj,
-      isDisabled: true,
-    }));
-  }
-
-  tasksComplete.value = tasksStore.tasksComplete;
-  if (tasksComplete.value) {
-    tasksComplete.value = tasksComplete.value.map((obj) => ({
-      ...obj,
-      isDisabled: true,
-    }));
-  }
-
-  tasksArray.value =
-    props.dataControl === "to-do" ? tasksToDo.value : tasksComplete.value;
-
-  watch(tasksArray.value, async (newQuestion, oldQuestion) => {
-    console.log(newQuestion);
-    console.log(oldQuestion);
-    console.log(tasksArray.value);
-  });
-} */
-
 async function editTask(index) {
   let updateTaskData = this.tasksArray[index];
   const response = await tasksStore.editTask(updateTaskData.id, updateTaskData);
   this.tasksArray[index].isDisabled = !this.tasksArray[index].isDisabled;
 }
 
-/* async function deleteTask(id) {
+async function deleteTask(id) {
   const response = await tasksStore.deleteTask(id);
-  updateTasks();
-} */
+  loadTasks();
+}
 
-/* async function checkCompletion(id, complete) {
+async function checkCompletion(id, complete) {
+  console.log(id, complete);
   const response = await tasksStore.toggleCompletionTask(id, complete);
-  let found = tasksArray.find((e) => e.is_complete === true);
-  if (this.tasksArray.some(tasksArray.is_complete)) {
-    allDone = false;
-  } else {
-    allDone = true;
-  }
-} */
+  loadTasks();
+  let found = tasksArray.value.find((e) => e.is_complete === true);
+}
 </script>
 
 <style lang="scss" scoped></style>
