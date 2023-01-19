@@ -2,7 +2,7 @@
   <button
     @click="deleteTask(task.id)"
     type="button"
-    class="my-1 py-2 px-6 rounded-sm self-start text-sm text-white bg-red-500 border-solid border-2 border-transparent hover:border-red-500 hover:bg-white hover:text-red-500"
+    class="w-1/2 my-1 py-2 px-6 rounded-sm self-start text-sm text-white bg-red-500 border-solid border-2 border-transparent hover:border-red-500 hover:bg-white hover:text-red-500"
   >
     Remove
   </button>

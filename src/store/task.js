@@ -44,7 +44,6 @@ export const useTaskStore = defineStore("tasks", {
             is_complete: taskData.is_complete,
           })
           .eq("id", id);
-        this.fetchTasks();
       } catch (error) {
         throw error;
       }
