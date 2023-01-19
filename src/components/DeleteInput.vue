@@ -16,7 +16,6 @@ const tasksStore = useTaskStore();
 
 async function deleteTask(id) {
   const response = await tasksStore.deleteTask(id);
-  await tasksStore.fetchTasks();
 }
 </script>
 

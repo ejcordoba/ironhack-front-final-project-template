@@ -1,5 +1,8 @@
 <template>
-  <div class="flex items-start bg-light-grey rounded-md shadow-lg w-2/5 mx-auto flex-col">
+  <div
+    v-if="tasksArray.length > 0"
+    class="flex items-start bg-light-grey rounded-md shadow-lg w-2/5 mx-auto flex-col"
+  >
     <h1 class="mx-auto py-3 text-2xl text-at-light-green">
       {{ componentTitle }}
     </h1>
@@ -8,28 +11,13 @@
         <div v-for="(task, index) in tasksArray" class="flex flex-row align-middle">
           <div class="flex">
             <div class="flex flex-col">
-              <input
-                type="text"
-                required
-                class="p-2 text-gray-500 focus:outline-none"
-                id="task-title"
-                v-model="task.title"
-                :readonly="task.isDisabled"
-                :disabled="task.isDisabled"
-                @keyup.enter="editTask(index)"
-              />
+              <task-input :task="task"></task-input>
             </div>
             <div class="flex items-center mr-3">
               <check-input :task="task"></check-input>
             </div>
             <div class="flex flex-row">
-              <button
-                @click="editTask(index)"
-                type="button"
-                class="my-1 py-2 px-6 rounded-sm self-start text-sm text-white bg-at-light-green duration-200 border-solid border-2 border-transparent hover:border-at-light-green hover:bg-white hover:text-at-light-green"
-              >
-                Edit
-              </button>
+              <edit-input :task="task"></edit-input>
               <delete-input :task="task"></delete-input>
             </div>
           </div>
@@ -45,6 +33,8 @@ import { useUserStore } from "../store/user.js";
 import { ref, watch } from "vue";
 import CheckInput from "../components/CheckInput.vue";
 import DeleteInput from "../components/DeleteInput.vue";
+import EditInput from "../components/EditInput.vue";
+import TaskInput from "../components/TaskInput.vue";
 const tasksStore = useTaskStore();
 const userStore = useUserStore();
 let tasksArray = ref([]);
@@ -62,9 +52,8 @@ async function loadTasks() {
     await tasksStore.fetchTasks();
     try {
       tasksArray.value = tasksStore.tasksToDo;
-      console.log(tasksArray.value);
     } catch (error) {
-      console.log(error);
+      throw error;
     }
     watch(
       tasksStore,
@@ -78,7 +67,7 @@ async function loadTasks() {
     try {
       tasksArray.value = tasksStore.tasksCompleted;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
     watch(
       tasksStore,
@@ -88,12 +77,6 @@ async function loadTasks() {
       { deep: true }
     );
   }
-}
-
-async function editTask(index) {
-  let updateTaskData = this.tasksArray[index];
-  const response = await tasksStore.editTask(updateTaskData.id, updateTaskData);
-  this.tasksArray[index].isDisabled = !this.tasksArray[index].isDisabled;
 }
 </script>
 

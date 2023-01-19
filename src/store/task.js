@@ -17,7 +17,6 @@ export const useTaskStore = defineStore("tasks", {
         .order("id", { ascending: false });
       this.tasks = tasks;
       this.tasks = this.tasks.map((obj) => ({ ...obj, isDisabled: true }));
-      console.log(this.tasks);
       this.tasksCompleted = this.tasks.filter((obj) => obj.is_complete);
       this.tasksToDo = this.tasks.filter((obj) => !obj.is_complete);
     },
@@ -45,8 +44,9 @@ export const useTaskStore = defineStore("tasks", {
             is_complete: taskData.is_complete,
           })
           .eq("id", id);
+        this.fetchTasks();
       } catch (error) {
-        console.log(error);
+        throw error;
       }
     },
     async deleteTask(id) {
@@ -55,11 +55,10 @@ export const useTaskStore = defineStore("tasks", {
           .from("tasks")
           .delete()
           .eq("id", id);
+        this.fetchTasks();
       } catch (error) {
-        console.log(error);
-        //throw error;
+        throw error;
       }
-      console.log(id);
     },
     async toggleCompletionTask(id, complete) {
       try {
@@ -67,13 +66,10 @@ export const useTaskStore = defineStore("tasks", {
           .from("tasks")
           .update({ is_complete: complete })
           .eq("id", id);
+        this.fetchTasks();
       } catch (error) {
-        console.log(error);
+        throw error;
       }
     },
-    // Hacer POST
-    // Hacer el PUT (edit)
-    // Hacer el delete
-    // Hacer el PUT (cambiar entre completada y pendiente)
   },
 });

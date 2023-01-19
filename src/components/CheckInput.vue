@@ -17,9 +17,7 @@ const props = defineProps(["task"]);
 const tasksStore = useTaskStore();
 
 async function checkCompletion(id, complete) {
-  console.log(id, complete);
   const response = await tasksStore.toggleCompletionTask(id, complete);
-  await tasksStore.fetchTasks();
 }
 </script>
 
