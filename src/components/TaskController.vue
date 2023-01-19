@@ -30,13 +30,7 @@
               >
                 Edit
               </button>
-              <button
-                @click="deleteTask(task.id)"
-                type="button"
-                class="my-1 py-2 px-6 rounded-sm self-start text-sm text-white bg-red-500 border-solid border-2 border-transparent hover:border-red-500 hover:bg-white hover:text-red-500"
-              >
-                Remove
-              </button>
+              <delete-input :task="task"></delete-input>
             </div>
           </div>
         </div>
@@ -50,6 +44,7 @@ import { useTaskStore } from "../store/task.js";
 import { useUserStore } from "../store/user.js";
 import { ref, watch } from "vue";
 import CheckInput from "../components/CheckInput.vue";
+import DeleteInput from "../components/DeleteInput.vue";
 const tasksStore = useTaskStore();
 const userStore = useUserStore();
 let tasksArray = ref([]);
@@ -99,11 +94,6 @@ async function editTask(index) {
   let updateTaskData = this.tasksArray[index];
   const response = await tasksStore.editTask(updateTaskData.id, updateTaskData);
   this.tasksArray[index].isDisabled = !this.tasksArray[index].isDisabled;
-}
-
-async function deleteTask(id) {
-  const response = await tasksStore.deleteTask(id);
-  loadTasks();
 }
 </script>
 
