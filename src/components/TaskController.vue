@@ -1,18 +1,21 @@
 <template>
   <div
     v-if="tasksArray.length > 0"
-    class="flex items-center justify-evenly bg-light-grey rounded-md shadow-lg w-2/5 mx-auto flex-col p-3"
+    class="w-full flex items-center justify-evenly bg-light-grey rounded-md shadow-lg mx-auto my-3 flex-col p-3"
   >
     <h1 class="mx-auto py-3 text-2xl text-at-light-green">
       {{ componentTitle }}
     </h1>
-    <div class="flex flex-wrap justify-center align-middle bg-light-grey">
-      <div v-for="(task, index) in tasksArray" class="flex flex-row">
-        <div class="flex-col">
+    <div class="w-full flex flex-wrap justify-evenly align-middle bg-light-grey">
+      <div
+        v-for="(task, index) in tasksArray"
+        class="flex flex-row w-full flex-wrap my-3"
+      >
+        <div class="w-full">
           <task-input :task="task"></task-input>
           <check-input :task="task"></check-input>
         </div>
-        <div class="flex-col">
+        <div class="w-full">
           <edit-input :task="task"></edit-input>
           <delete-input :task="task"></delete-input>
         </div>
