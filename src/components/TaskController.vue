@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="tasksArray.length > 0"
-    class="w-full flex items-center justify-evenly bg-light-grey rounded-md shadow-lg mx-auto my-3 flex-col p-3"
+    class="w-full lg:w-2/5 flex items-center bg-light-grey rounded-md shadow-lg mx-auto my-3 flex-col p-3"
   >
     <h1 class="mx-auto py-3 text-2xl text-at-light-green">
       {{ componentTitle }}

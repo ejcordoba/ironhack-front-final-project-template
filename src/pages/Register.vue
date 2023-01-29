@@ -75,6 +75,7 @@ const register = async () => {
       const response = userStore.signUp(email.value, password.value);
       router.push({ name: "Login" });
     } catch (error) {
+      console.log(error);
       errorMsg.value = `Error: ${error.message}`;
       setTimeout(() => {
         errorMsg.value = null;
