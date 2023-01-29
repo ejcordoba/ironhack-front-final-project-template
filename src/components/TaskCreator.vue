@@ -21,7 +21,7 @@
             <input
               type="text"
               required
-              class="p-2 text-gray-500 focus:outline-none"
+              class="p-2 text-gray-500 bg-white border-2 border-solid border-teal-300"
               id="task-title"
               v-model="taskTitle"
             />

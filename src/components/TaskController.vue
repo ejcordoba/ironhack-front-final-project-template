@@ -1,12 +1,13 @@
 <template>
+  <div class="relative"></div>
   <div
     v-if="tasksArray.length > 0"
-    class="w-full lg:w-2/5 flex items-center bg-light-grey rounded-md shadow-lg mx-auto my-3 flex-col p-3"
+    class="w-full lg:w-2/5 flex items-center bg-white rounded-md shadow-yellow-400/50 shadow-md drop-shadow-md mx-auto my-3 flex-col p-3"
   >
     <h1 class="mx-auto py-3 text-2xl text-at-light-green">
       {{ componentTitle }}
     </h1>
-    <div class="w-full flex flex-wrap justify-evenly align-middle bg-light-grey">
+    <div class="w-full flex flex-wrap justify-evenly align-middle bg-transparent">
       <div
         v-for="(task, index) in tasksArray"
         class="flex flex-row w-full flex-wrap my-3"
