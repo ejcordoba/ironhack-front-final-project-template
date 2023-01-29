@@ -13,3 +13,4 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 - Look for a nice icon for app
 - Avoid insert two tasks with same title
 - Update supabase keys store ... config in netlify
+- Add transitions
