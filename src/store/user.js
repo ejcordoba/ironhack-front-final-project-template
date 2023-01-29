@@ -18,9 +18,9 @@ export const useUserStore = defineStore("user", {
           email: email,
           password: password,
         });
-        if (error) throw error;
         if (user) this.user = user;
       } catch (error) {
+        console.log(error);
         throw error;
       }
     },
@@ -30,12 +30,11 @@ export const useUserStore = defineStore("user", {
           email: email,
           password: password,
         });
-        if (user) this.user = user;      
+        if (user) this.user = user;
         if (error) throw error;
       } catch (error) {
         throw error;
       }
-
     },
     async logout() {
       const { user, error } = await supabase.auth.signOut();

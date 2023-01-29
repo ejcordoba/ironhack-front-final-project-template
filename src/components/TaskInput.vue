@@ -2,7 +2,7 @@
   <input
     type="text"
     required
-    class="p-2 text-gray-500 focus:outline-none"
+    class="w-full p-2 text-gray-500 focus:outline-none"
     id="task-title"
     v-model="task.title"
     :readonly="task.isDisabled"
