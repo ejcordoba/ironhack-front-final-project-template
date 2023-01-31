@@ -1,5 +1,4 @@
 <template>
-  <div class="relative"></div>
   <div
     v-if="tasksArray.length > 0"
     class="w-full lg:w-2/5 flex items-center bg-white rounded-md shadow-yellow-400/50 shadow-md drop-shadow-md mx-auto my-3 flex-col p-3"
